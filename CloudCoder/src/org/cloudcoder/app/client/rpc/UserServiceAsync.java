@@ -37,6 +37,7 @@ public interface UserServiceAsync
     void addUserToCourse(EditedUser editedUser, int courseId,
 			AsyncCallback<Boolean> callback);
     void editUser(User user, AsyncCallback<Boolean> asyncCallback);
+    void deleteUser(EditedUser user, Course course, AsyncCallback<Boolean> asyncCallback);
     void editCourseRegistrationType(int userId, int courseId, CourseRegistrationType type,
         AsyncCallback<Void> callback);
 	void getUserCourseRegistrationList(Course course, User user,

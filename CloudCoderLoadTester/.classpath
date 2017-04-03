@@ -10,7 +10,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/CloudCoderModelClasses"/>
-	<classpathentry kind="lib" path="/CloudCoder/war/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="/home/jankvr/Dokumenty/gwt-servlet.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CloudCoderModelClassesPersistence"/>
 	<classpathentry kind="lib" path="/CloudCoder/war/WEB-INF/lib/mysql-connector-java-5.1.16-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>

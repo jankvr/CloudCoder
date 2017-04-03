@@ -1,4 +1,4 @@
-// CloudCoder - a web-based pedagogical programming environment
+ // CloudCoder - a web-based pedagogical programming environment
 // Copyright (C) 2011-2015, Jaime Spacco <jspacco@knox.edu>
 // Copyright (C) 2011-2015, David H. Hovemeyer <david.hovemeyer@gmail.com>
 //
@@ -90,7 +90,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
 		// Make sure requesting user has permission to edit
 		// the user account
-		if (!checkEditUser(authenticatedUser, user)) {
+		if (!checkUser(authenticatedUser, user)) {
 			return false;
 		}
 
@@ -118,7 +118,19 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 		// This IDatabase method isn't actually implemented yet:
 		//Database.getInstance().editRegistrationType(editedUser.getUser().getId(), course.getId(), editedUser.getRegistrationType());
 		return true;
-	}    
+	}   
+	
+	@Override
+	public Boolean deleteUser(EditedUser user, Course course) throws CloudCoderAuthenticationException {
+		User authenticatedUser = ServletUtil.checkClientIsAuthenticated(getThreadLocalRequest(), GetCoursesAndProblemsServiceImpl.class);
+		
+		if (!checkInstructorStatus(authenticatedUser, course.getId(), "delete user in course")) {
+			return false;
+		}
+		
+		Database.getInstance().deleteUser(user.getUser());
+		return true;
+	}
 
 	@Override
 	public void editCourseRegistrationType(int userId, int courseId, CourseRegistrationType type)
@@ -208,7 +220,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	 * @return true if the logged-in user has permission to edit given user account,
 	 *         false otherwise
 	 */
-	private boolean checkEditUser(User authenticatedUser, User editedUser) throws CloudCoderAuthenticationException {
+	private boolean checkUser(User authenticatedUser, User editedUser) throws CloudCoderAuthenticationException {
 		// Make sure either
 		//   (1) the requesting user is editing his/her own account info, or
 		//   (2) the requesting user is an instructor in a course in which
@@ -218,4 +230,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 		}
 		return Database.getInstance().isInstructorFor(authenticatedUser, editedUser);
 	}
+	
+
+
 }

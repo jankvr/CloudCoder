@@ -32,12 +32,21 @@ public class CourseSelection implements Serializable {
 
 	private Course course;
 	private Module module;
+	private CourseAndCourseRegistration courseSelection;
 	
 	/**
 	 * Default constructor.
 	 */
 	public CourseSelection() {
 		
+	}
+	
+	public CourseSelection(Course course) {
+		this.course = course;
+	}
+	
+	public CourseSelection(CourseAndCourseRegistration courseSelection) {
+		this.courseSelection = courseSelection;
 	}
 	
 	/**

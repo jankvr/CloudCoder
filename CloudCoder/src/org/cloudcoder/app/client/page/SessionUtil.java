@@ -533,6 +533,53 @@ public class SessionUtil {
 		}.execute();
 	}
 	
+	private static final RunOnce deleteUserRunner = new RunOnce();
+
+	public static void deleteUserInCourse(final CloudCoderPage page, final EditedUser deletedUser, final Course course, final Runnable onSuccess) {
+		new OneTimeRunnable(deleteUserRunner, deletedUser) {
+			@Override
+			public void run() {
+				doDeleteUser(deletedUser, onSuccess);	
+				
+			}
+			
+			private void doDeleteUser(final EditedUser deletedUser, final Runnable onSuccess) {
+				RPC.usersService.deleteUser(deletedUser, course, new AsyncCallback<Boolean>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						if (caught instanceof CloudCoderAuthenticationException) {
+							page.recoverFromServerSessionTimeout(new Runnable() {
+								@Override
+								public void run() {
+									doDeleteUser(deletedUser, onSuccess);
+								}
+							});
+						} else {
+							page.getSession().add(StatusMessage.error("Could not delete user", caught));
+							onDone();
+						}
+						
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result) {
+							onSuccess.run();
+						} else {
+							page.getSession().add(StatusMessage.error("Could not delete user"));
+						}
+						onDone();
+					}
+					
+				});
+			}
+			
+		}.execute();
+		
+	}
+	
+	
 	private static final RunOnce editUserInCourseRunner = new RunOnce();
 
 	/**

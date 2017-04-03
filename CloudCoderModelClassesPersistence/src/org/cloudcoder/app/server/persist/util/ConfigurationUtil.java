@@ -247,6 +247,24 @@ public class ConfigurationUtil
         }
     }
     
+    public static void deleteUserById(Connection conn, User user) throws SQLException {
+    	String delete = "delete from " + User.SCHEMA.getDbTableName() +
+    					" where id = ? ";
+                
+        PreparedStatement stmt=null;
+        try {
+            stmt=conn.prepareStatement(delete);
+            //int index=DBUtil.bindModelObjectValuesForUpdate(user, user.getSchema(), stmt);
+            stmt.setInt(1, user.getId());
+            
+            stmt.executeUpdate();
+            
+        } finally {
+            DBUtil.closeQuietly(stmt);
+        }
+    	
+    }
+    
     public static void updateUserById(Connection conn, User user) throws SQLException
     {
     	// Special case/hack:

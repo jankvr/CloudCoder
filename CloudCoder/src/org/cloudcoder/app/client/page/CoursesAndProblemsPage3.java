@@ -28,6 +28,7 @@ import org.cloudcoder.app.client.rpc.RPC;
 import org.cloudcoder.app.client.view.AccordionPanel;
 import org.cloudcoder.app.client.view.BulkRegistrationPanel;
 import org.cloudcoder.app.client.view.CourseSelectionListBox;
+import org.cloudcoder.app.client.view.CoursesListPanel;
 import org.cloudcoder.app.client.view.CreateCoursePanel;
 import org.cloudcoder.app.client.view.DebugPopupPanel;
 import org.cloudcoder.app.client.view.ExerciseAdminPanel;
@@ -104,6 +105,8 @@ public class CoursesAndProblemsPage3 extends CloudCoderPage {
 			this.widgetIndex = widgetIndex;
 		}
 	}
+
+	
 	
 	private class UI extends Composite implements SessionObserver, Subscriber {
 		private static final double SEP_PX = 10.0;
@@ -115,6 +118,7 @@ public class CoursesAndProblemsPage3 extends CloudCoderPage {
 		private static final double EXERCISES_LABEL_WIDTH_PX = 100.0;
 		private static final double EAST_PANEL_WIDTH_PX = 400.0;
 		
+		private CoursesListPanel coursesListPanel;
 		private PageNavPanel pageNavPanel;
 		private StatusMessageView statusMessageView;
 		private FlowPanel courseSelectionPanel;
@@ -368,7 +372,11 @@ public class CoursesAndProblemsPage3 extends CloudCoderPage {
 				}
 			});
 			accordionPanel.add(createCoursePanel, "Create course");
-
+			
+			coursesListPanel = new CoursesListPanel(CoursesAndProblemsPage3.this);
+			coursesListPanel.activate(getSession(), getSubscriptionRegistrar());
+			
+			accordionPanel.add(coursesListPanel, "Manage courses");
 			// Could put other widgets in the accordion panel here...
 			
 			return accordionPanel;

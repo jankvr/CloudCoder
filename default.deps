@@ -7,7 +7,7 @@ http://repo1.maven.org/maven2/com/google/guava/guava/13.0.1/guava-13.0.1.jar
 http://central.maven.org/maven2/log4j/log4j/1.2.16/log4j-1.2.16.jar
   CloudCoder/war/WEB-INF/lib/log4j-1.2.16.jar
   CloudCoderLogging/lib/log4j-1.2.16.jar
-http://owasp-java-html-sanitizer.googlecode.com/svn-history/r118/trunk/distrib/lib/owasp-java-html-sanitizer.jar
+https://github.com/OWASP/java-html-sanitizer/raw/master/distrib/lib/owasp-java-html-sanitizer.jar
   CloudCoderLogging/lib/owasp-java-html-sanitizer.jar
 http://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar
   CloudCoderLogging/lib/slf4j-api-1.6.4.jar
@@ -91,7 +91,7 @@ http://download.eclipse.org/jetty/orbit/org.apache.taglibs.standard.glassfish_1.
   CloudCoderJetty/lib/jetty/jsp/org.apache.taglibs.standard.glassfish_1.2.0.v201004190952.jar
 http://repo1.maven.org/maven2/org/eclipse/jetty/jetty-jsp-2.1/7.4.4.v20110707/jetty-jsp-2.1-7.4.4.v20110707.jar
   CloudCoderJetty/lib/jetty/jsp/jetty-jsp-2.1-7.4.4.v20110707.jar
-http://json-simple.googlecode.com/files/json-simple-1.1.1.jar
+https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/json-simple/json-simple-1.1.1.jar
   CloudCoderModelClassesJSON/lib/json-simple-1.1.1.jar
   CloudCoder/war/WEB-INF/lib/json-simple-1.1.1.jar
   CloudCoderRepository/war/WEB-INF/lib/json-simple-1.1.1.jar
@@ -181,7 +181,7 @@ ${mirrorServiceEclipse371}/org.eclipse.text_3.5.101.r371_v20110810-0800.jar
 # CloudCoderDataAnalysis uses opencsv
 #
 opencsv_version=2.4
-https://opencsv.googlecode.com/files/opencsv-${opencsv_version}.jar
+http://repo1.maven.org/maven2/au/com/bytecode/opencsv/2.4/opencsv-2.4.jar
   CloudCoderDataAnalysis/lib/opencsv-${opencsv_version}.jar
 
 #

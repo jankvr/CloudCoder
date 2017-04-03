@@ -562,8 +562,8 @@ public class UserAdminPage extends CloudCoderPage
 		}
 
 		private void handleDeleteUser() {
-            GWT.log("Delete User not implemented");
-            Window.alert("Not implemented yet, sorry");
+            GWT.log("handle delete user");
+            
         }
         
 		private void handleNewUser() {

@@ -134,12 +134,62 @@ public class ManageUsersPanel extends Composite implements CourseInstructorUI, S
 	}
 
 	protected void handleDeleteUser() {
-		// TODO: implement this
-		page.getSession().add(StatusMessage.information("Deleting users is not supported yet, sorry"));
+		final User chosen = userListView.getSelectedUser();
+		CourseSelection courseSel = page.getSession().get(CourseSelection.class);
+		
+		if (chosen == null || courseSel == null) {
+			return;
+		}
+		
+		final Course course = courseSel.getCourse();
+		
+		SessionUtil.getUserCourseRegistrations(page, chosen, course, new ICallback<CourseRegistrationList>() {
+
+			@Override
+			public void call(CourseRegistrationList regList) {
+				if (regList == null) {
+					page.getSession().add(StatusMessage.error("You are not an instructor?"));
+					return;
+				}
+				
+				if (regList.getList().isEmpty()) {
+					page.getSession().add(StatusMessage.error("User is not registered in course?"));
+					return;
+				}
+				
+				CourseRegistration firstCourseRegistration = regList.getList().get(0);
+				
+				final DeleteUserDialog deleteUserDialog = new DeleteUserDialog(chosen, 
+						firstCourseRegistration.getRegistrationType().compareTo(CourseRegistrationType.INSTRUCTOR) >= 0,
+						firstCourseRegistration.getSection(),
+						false);
+				
+				deleteUserDialog.setDeleteUserCallback(new ICallback<EditedUser>() {
+
+					@Override
+					public void call(final EditedUser deletedUser) {
+						deleteUserDialog.hide();
+						
+						SessionUtil.deleteUserInCourse(page, deletedUser, course, new Runnable() {
+							@Override
+							public void run() {
+								page.getSession().add(StatusMessage.goodNews("User " + deletedUser.getUser().getUsername() + " deleted successfully"));
+							}
+						});
+						
+						//page.getSession().add(StatusMessage.information("Deleting users is not supported yet. Jan Kovar"));
+						
+					}});
+				deleteUserDialog.center();
+			}
+			
+		});
+		
 	}
 
 	protected void handleEditUser() {
 		final User chosen = userListView.getSelectedUser();
+		
 		CourseSelection courseSel = page.getSession().get(CourseSelection.class);
 		if (courseSel == null) {
 			return;

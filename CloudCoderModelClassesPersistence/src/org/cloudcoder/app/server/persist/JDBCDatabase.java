@@ -34,6 +34,7 @@ import org.cloudcoder.app.server.persist.txn.CompleteRegistration;
 import org.cloudcoder.app.server.persist.txn.CreateCourseFromSpec;
 import org.cloudcoder.app.server.persist.txn.CreateProblemSummary;
 import org.cloudcoder.app.server.persist.txn.DeleteProblem;
+import org.cloudcoder.app.server.persist.txn.DeleteUser;
 import org.cloudcoder.app.server.persist.txn.EditUser;
 import org.cloudcoder.app.server.persist.txn.EditUserGivenUserData;
 import org.cloudcoder.app.server.persist.txn.EndQuiz;
@@ -284,6 +285,12 @@ public class JDBCDatabase implements IDatabase {
 	public void editUser(final User user)
 	{
 	    databaseRun(new EditUser(user));
+	}
+	
+	@Override
+	public void deleteUser(User user) 
+	{
+		databaseRun(new DeleteUser(user));
 	}
 	
 	@Override
@@ -655,5 +662,7 @@ public class JDBCDatabase implements IDatabase {
 		// Success!
 		return result;
 	}
+
+
 	
 }

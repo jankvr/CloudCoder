@@ -399,6 +399,8 @@ public interface IDatabase {
      */
     public void editUser(User user);
 
+    public void deleteUser(User user);
+    
     /**
      * Edit the registration type for the user record indicated by the
      * userId and the course indicated by the given courseId.

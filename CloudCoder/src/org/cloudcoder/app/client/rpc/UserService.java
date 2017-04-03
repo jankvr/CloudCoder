@@ -81,6 +81,7 @@ public interface UserService extends RemoteService
      */
     Boolean editUser(EditedUser editedUser, Course course) throws CloudCoderAuthenticationException;
     
+    Boolean deleteUser(EditedUser user, Course course) throws CloudCoderAuthenticationException;
     
     void editCourseRegistrationType(int userId, int courseId, CourseRegistrationType type) throws CloudCoderAuthenticationException;
     
