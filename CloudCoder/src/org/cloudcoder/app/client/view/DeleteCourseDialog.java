@@ -17,6 +17,7 @@
 
 package org.cloudcoder.app.client.view;
 
+import org.cloudcoder.app.shared.model.CourseAndCourseRegistration;
 import org.cloudcoder.app.shared.model.EditedUser;
 import org.cloudcoder.app.shared.model.ICallback;
 import org.cloudcoder.app.shared.model.User;
@@ -36,7 +37,7 @@ public class DeleteCourseDialog extends DialogBox {
 	private DeleteUserView view;
 	private Button button;
 	private Button cancelButton;
-	private ICallback<EditedUser> deleteCourseCallback;
+	private ICallback<CourseAndCourseRegistration> deleteCourseCallback;
 	private static HTML CONFIRMATION_MESSAGE = new HTML("Are you sure you want to delete this course?");
 	
 	public DeleteCourseDialog(User user, boolean userIsInstructor, int sectionNum, boolean verifyCurrentPassword) {

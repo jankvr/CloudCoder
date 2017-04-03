@@ -147,15 +147,7 @@ public class CoursesListPanel extends Composite implements CourseInstructorUI, S
 		
 		final Course course = courseSel.getCourse();
 
-		SessionUtil.getUserCourseRegistrations(page, cc, course, new ICallback<CourseRegistrationList>() {
-
-			@Override
-			public void call(CourseRegistrationList value) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		};
+		
 		
 		page.getSession().add(StatusMessage.error("Not implemented edit for " + cc.getCourse().getNameAndTitle()));
 	}

@@ -176,9 +176,6 @@ public class ManageUsersPanel extends Composite implements CourseInstructorUI, S
 								page.getSession().add(StatusMessage.goodNews("User " + deletedUser.getUser().getUsername() + " deleted successfully"));
 							}
 						});
-						
-						//page.getSession().add(StatusMessage.information("Deleting users is not supported yet. Jan Kovar"));
-						
 					}});
 				deleteUserDialog.center();
 			}
