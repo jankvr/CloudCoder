@@ -55,7 +55,7 @@ public class DeleteCourseDialog extends DialogBox {
 		this.button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				deleteCourseCallback.call(view.getData());
+				//deleteCourseCallback.call(view.getData());
 				
 			}
 		});
@@ -80,7 +80,7 @@ public class DeleteCourseDialog extends DialogBox {
 		
 	}
 	
-	public void setDeleteUserCallback(ICallback<EditedUser> deleteUserCallback) {
+	public void setDeleteUserCallback(ICallback<CourseAndCourseRegistration> deleteUserCallback) {
 		this.deleteCourseCallback = deleteUserCallback;
 		
 	}
