@@ -73,6 +73,9 @@ public interface GetCoursesAndProblemsServiceAsync {
 	void deleteProblem(Course course, Problem problem,
 			AsyncCallback<OperationResult> callback);
 
+	void deleteCourse(CourseAndCourseRegistration cc,
+			AsyncCallback<Boolean> callback);
+
 	void startQuiz(Problem problem, int section, AsyncCallback<Quiz> callback);
 
 	void findCurrentQuiz(Problem problem, AsyncCallback<Quiz> callback);

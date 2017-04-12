@@ -114,4 +114,6 @@ public interface UserService extends RemoteService
      * @throws CloudCoderAuthenticationException
      */
     OperationResult registerExistingUser(CourseRegistrationSpec spec) throws CloudCoderAuthenticationException;
+    
+    Boolean isInstructor() throws CloudCoderAuthenticationException;
 }

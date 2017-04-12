@@ -177,6 +177,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	}
 	
 	@Override
+	public Boolean isInstructor() throws CloudCoderAuthenticationException {
+		User authenticatedUser = ServletUtil.checkClientIsAuthenticated(getThreadLocalRequest(), GetCoursesAndProblemsServiceImpl.class);
+		return authenticatedUser.isSuperuser();
+		
+	}
+	
+	@Override
 	public OperationResult registerExistingUser(CourseRegistrationSpec spec) throws CloudCoderAuthenticationException {
 		User authenticatedUser = ServletUtil.checkClientIsAuthenticated(getThreadLocalRequest(), GetCoursesAndProblemsServiceImpl.class);
 		

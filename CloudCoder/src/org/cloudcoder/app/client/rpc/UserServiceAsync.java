@@ -17,6 +17,7 @@
 
 package org.cloudcoder.app.client.rpc;
 
+import org.cloudcoder.app.shared.model.CloudCoderAuthenticationException;
 import org.cloudcoder.app.shared.model.Course;
 import org.cloudcoder.app.shared.model.CourseRegistrationList;
 import org.cloudcoder.app.shared.model.CourseRegistrationSpec;
@@ -46,4 +47,5 @@ public interface UserServiceAsync
 			AsyncCallback<Boolean> callback);
 	void suggestUsernames(String prefix, AsyncCallback<User[]> callback);
 	void registerExistingUser(CourseRegistrationSpec spec, AsyncCallback<OperationResult> callback);
+	void isInstructor(AsyncCallback<Boolean> callback);
 }

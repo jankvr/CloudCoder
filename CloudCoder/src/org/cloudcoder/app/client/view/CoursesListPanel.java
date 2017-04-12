@@ -24,12 +24,19 @@ import org.cloudcoder.app.client.page.SessionObserver;
 import org.cloudcoder.app.client.page.SessionUtil;
 import org.cloudcoder.app.shared.model.Course;
 import org.cloudcoder.app.shared.model.CourseAndCourseRegistration;
+import org.cloudcoder.app.shared.model.CourseListSelection;
+import org.cloudcoder.app.shared.model.CourseRegistration;
 import org.cloudcoder.app.shared.model.CourseRegistrationList;
+import org.cloudcoder.app.shared.model.CourseRegistrationType;
 import org.cloudcoder.app.shared.model.CourseSelection;
+import org.cloudcoder.app.shared.model.EditedUser;
 import org.cloudcoder.app.shared.model.ICallback;
+import org.cloudcoder.app.shared.model.User;
 import org.cloudcoder.app.shared.util.SubscriptionRegistrar;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.LayoutPanel;
 /**
@@ -137,19 +144,41 @@ public class CoursesListPanel extends Composite implements CourseInstructorUI, S
 	}
 	
 	private void handleDelete() {
-		final CourseAndCourseRegistration cc = view.getSelectedCourse();
 		
+		final CourseAndCourseRegistration cc = view.getSelectedCourse();
 		CourseSelection courseSel = page.getSession().get(CourseSelection.class);
 		
 		if (cc == null || courseSel == null) {
 			return;
 		}
-		
-		final Course course = courseSel.getCourse();
 
+		SessionUtil.getUserStatus(page, new ICallback<Boolean>() {
+
+			@Override
+			public void call(final Boolean value) {
+				final DeleteCourseDialog deleteCourseDialog = new DeleteCourseDialog(cc, true, false);
+				
+				deleteCourseDialog.setDeleteCourseCallback(new ICallback<CourseAndCourseRegistration>() {
+
+					@Override
+					public void call(final CourseAndCourseRegistration deletedCourse) {
+						deleteCourseDialog.hide();
+						
+						SessionUtil.deleteCourse(page, cc, new Runnable() {
+							@Override
+							public void run() {
+								page.getSession().add(StatusMessage.goodNews("Course " + cc.getCourse().getNameAndTitle() + " deleted successfully"));
+							}
+						});
+					}});
+				deleteCourseDialog.center();
+
+			}
+
+			
+			
+		});
 		
-		
-		page.getSession().add(StatusMessage.error("Not implemented edit for " + cc.getCourse().getNameAndTitle()));
 	}
 
 }

@@ -35,6 +35,7 @@ import org.cloudcoder.app.shared.model.TestCase;
 import org.cloudcoder.app.shared.model.User;
 import org.cloudcoder.app.shared.model.UserAndSubmissionReceipt;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -184,6 +185,9 @@ public interface GetCoursesAndProblemsService extends RemoteService {
 	 * The currently-authenticated user must be an instructor in the course.
 	 */
 	public OperationResult deleteProblem(Course course, Problem problem) throws CloudCoderAuthenticationException;
+	
+	public Boolean deleteCourse(CourseAndCourseRegistration cc) throws CloudCoderAuthenticationException;
+
 	
 	/**
 	 * Start a quiz.

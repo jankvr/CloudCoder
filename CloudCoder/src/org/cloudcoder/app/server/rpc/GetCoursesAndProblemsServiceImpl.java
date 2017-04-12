@@ -673,4 +673,16 @@ public class GetCoursesAndProblemsServiceImpl extends RemoteServiceServlet
     	
     	return Database.getInstance().createCourse(spec);
     }
+
+	@Override
+	public Boolean deleteCourse(CourseAndCourseRegistration cc) throws CloudCoderAuthenticationException {
+		User authenticatedUser = ServletUtil.checkClientIsAuthenticated(getThreadLocalRequest(), GetCoursesAndProblemsServiceImpl.class);
+    	
+		// User must be a superuser
+    	if (!authenticatedUser.isSuperuser()) {
+    		return false;
+    	}
+    	
+    	return Database.getInstance().deleteCourse(cc);
+	}
 }

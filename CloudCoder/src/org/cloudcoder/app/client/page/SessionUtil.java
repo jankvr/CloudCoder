@@ -349,6 +349,48 @@ public class SessionUtil {
 		);
 	}
 	
+	private static final RunOnce deleteCourseRunner = new RunOnce();
+	
+	public static void deleteCourse(final CloudCoderPage page, final CourseAndCourseRegistration cc, final Runnable onSuccess) {
+		new OneTimeRunnable(deleteCourseRunner, cc) {
+			@Override
+			public void run() {
+				doDeleteCourse(page, cc, onSuccess);
+			}
+			
+			public void doDeleteCourse(final CloudCoderPage page, final CourseAndCourseRegistration cc, final Runnable onSucces) {
+				RPC.getCoursesAndProblemsService.deleteCourse(
+						cc, 
+						new AsyncCallback<Boolean>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								if (caught instanceof CloudCoderAuthenticationException) {
+									page.recoverFromServerSessionTimeout(new Runnable() {
+										@Override
+										public void run() {
+											doDeleteCourse(page, cc, onSuccess);
+										}
+									});
+								} else {
+									GWT.log("Failed to delete course");
+									page.getSession().add(StatusMessage.error("Error deleting course " + cc.getCourse().getNameAndTitle(), caught));
+									onDone();
+								}
+							}
+
+							@Override
+							public void onSuccess(Boolean result) {
+								page.getSession().add(StatusMessage.goodNews("Successfully deleted course " + cc.getCourse().getNameAndTitle()));
+								onSuccess.run();
+								onDone();
+							}
+				});
+			}
+		}.execute();
+		
+	}
+	
 	private static final RunOnce editUserRunner = new RunOnce();
 
 	/**
@@ -483,6 +525,45 @@ public class SessionUtil {
 					public void onSuccess(OperationResult result) {
 						callback.call(result);
 						onDone();
+					}
+				});
+			}
+		}.execute();
+	}
+	
+	private static final RunOnce getUserStatusRunner = new RunOnce();
+	
+	public static void getUserStatus(final CloudCoderPage page, final ICallback<Boolean> onSuccess) {
+		new OneTimeRunnable(getUserStatusRunner, page) {
+
+			@Override
+			public void run() {
+				doGetUserStatus(page, onSuccess);
+			}
+			
+			private void doGetUserStatus(final CloudCoderPage page, final ICallback<Boolean> onSuccess) {
+				RPC.usersService.isInstructor(new AsyncCallback<Boolean>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						if (caught instanceof CloudCoderAuthenticationException) {
+							page.recoverFromServerSessionTimeout(new Runnable() {
+								@Override
+								public void run() {
+									doGetUserStatus(page, onSuccess);
+								}
+							});
+						} else {
+							page.getSession().add(StatusMessage.error("Could not get instructor flag for user", caught));
+							onDone();
+						}
+						
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						onSuccess.call(result);
+						onDone();	
 					}
 				});
 			}

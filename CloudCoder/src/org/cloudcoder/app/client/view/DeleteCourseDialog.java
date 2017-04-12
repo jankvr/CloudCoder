@@ -34,17 +34,18 @@ import com.google.gwt.user.client.ui.HTML;
  *
  */
 public class DeleteCourseDialog extends DialogBox {
-	private DeleteUserView view;
+	private DeleteCourseView view;
 	private Button button;
 	private Button cancelButton;
 	private ICallback<CourseAndCourseRegistration> deleteCourseCallback;
+	
 	private static HTML CONFIRMATION_MESSAGE = new HTML("Are you sure you want to delete this course?");
 	
-	public DeleteCourseDialog(User user, boolean userIsInstructor, int sectionNum, boolean verifyCurrentPassword) {
+	public DeleteCourseDialog(CourseAndCourseRegistration cc, boolean userIsInstructor, boolean verifyCurrentPassword) {
 		setGlassEnabled(true); // semitransparent pane
 		
-		this.view = new DeleteUserView(verifyCurrentPassword);
-		this.view.populateUser(user, sectionNum, userIsInstructor);
+		this.view = new DeleteCourseView(verifyCurrentPassword);
+		this.view.populateCourse(cc);
 		FlowPanel panel = new FlowPanel();
 		FlowPanel buttonPanel = new FlowPanel();
 		panel.add(CONFIRMATION_MESSAGE);
@@ -55,8 +56,7 @@ public class DeleteCourseDialog extends DialogBox {
 		this.button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				//deleteCourseCallback.call(view.getData());
-				
+				deleteCourseCallback.call(view.getData());
 			}
 		});
 		
@@ -66,9 +66,7 @@ public class DeleteCourseDialog extends DialogBox {
 			@Override
 			public void onClick(ClickEvent event) {
 				hide();
-				
 			}
-			
 		});
 		
 		buttonPanel.add(button);
@@ -80,7 +78,7 @@ public class DeleteCourseDialog extends DialogBox {
 		
 	}
 	
-	public void setDeleteUserCallback(ICallback<CourseAndCourseRegistration> deleteUserCallback) {
+	public void setDeleteCourseCallback(ICallback<CourseAndCourseRegistration> deleteUserCallback) {
 		this.deleteCourseCallback = deleteUserCallback;
 		
 	}

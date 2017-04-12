@@ -25,6 +25,7 @@ import org.cloudcoder.app.client.page.SessionObserver;
 import org.cloudcoder.app.client.rpc.RPC;
 import org.cloudcoder.app.shared.model.Course;
 import org.cloudcoder.app.shared.model.CourseAndCourseRegistration;
+import org.cloudcoder.app.shared.model.CourseListSelection;
 import org.cloudcoder.app.shared.model.CourseSelection;
 import org.cloudcoder.app.shared.util.Publisher;
 import org.cloudcoder.app.shared.util.Subscriber;
@@ -102,7 +103,7 @@ public class CoursesListView extends ResizeComposite implements Subscriber, Sess
 			@Override
 			public void onSelectionChange(SelectionChangeEvent event) {
 				selected = selectionModel.getSelectedObject();
-				session.add(new CourseSelection(selected));
+				session.add(new CourseListSelection(selected));
 			}
 			
 		});
