@@ -28,6 +28,7 @@ import org.cloudcoder.app.shared.model.CloudCoderAuthenticationException;
 import org.cloudcoder.app.shared.model.ConfigurationSetting;
 import org.cloudcoder.app.shared.model.ConfigurationSettingName;
 import org.cloudcoder.app.shared.model.Course;
+import org.cloudcoder.app.shared.model.CourseAndCourseRegistration;
 import org.cloudcoder.app.shared.model.CourseCreationSpec;
 import org.cloudcoder.app.shared.model.CourseRegistration;
 import org.cloudcoder.app.shared.model.CourseRegistrationList;
@@ -774,4 +775,11 @@ public interface IDatabase {
 	 * @return an {@link OperationResult} describing the success or failure of the operation
 	 */
 	public OperationResult registerExistingUser(CourseRegistrationSpec spec);
+
+	/**
+	 * Delete an existing course.
+	 * 
+	 * @param cc the {@link CourseAndCourseRegistration}
+	 */
+	public Boolean deleteCourse(CourseAndCourseRegistration cc);
 }

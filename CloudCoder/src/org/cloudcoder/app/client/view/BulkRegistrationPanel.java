@@ -71,7 +71,7 @@ public class BulkRegistrationPanel extends ValidatedFormUI
 		
 		// Add widgets
 		InlineHTML fileFormatMsg = new InlineHTML("File should be tab-delimited in format:<br>" +
-				"<tt>username firstname lastname email password</tt>");
+				"<tt>username;firstname;lastname;email;password</tt>");
 		y = addWidget(y, fileFormatMsg, "", new NoopFieldValidator(), 36.0);
 		
 		this.fileUpload = new FileUpload();

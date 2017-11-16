@@ -34,6 +34,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.cloudcoder.app.server.persist.PasswordUtil;
+import org.cloudcoder.app.shared.model.Course;
+import org.cloudcoder.app.shared.model.CourseAndCourseRegistration;
 import org.cloudcoder.app.shared.model.CourseRegistration;
 import org.cloudcoder.app.shared.model.CourseRegistrationType;
 import org.cloudcoder.app.shared.model.User;
@@ -248,20 +250,70 @@ public class ConfigurationUtil
     }
     
     public static void deleteUserById(Connection conn, User user) throws SQLException {
-    	String delete = "delete from " + User.SCHEMA.getDbTableName() +
+    	String deleteUser = "delete from " + User.SCHEMA.getDbTableName() +
     					" where id = ? ";
                 
-        PreparedStatement stmt=null;
+    	String deleteRegistrations = "delete from " + CourseRegistration.SCHEMA.getDbTableName() + 
+    					" where user_id = ? ";
+    	
+        PreparedStatement deleteUserStatement = null;
+        PreparedStatement deleteRegistrationsStatement = null;
+        
         try {
-            stmt=conn.prepareStatement(delete);
-            //int index=DBUtil.bindModelObjectValuesForUpdate(user, user.getSchema(), stmt);
-            stmt.setInt(1, user.getId());
+        	conn.setAutoCommit(false);
+        	
+            deleteUserStatement = conn.prepareStatement(deleteUser);
+            deleteUserStatement.setInt(1, user.getId());
+            deleteUserStatement.executeUpdate();
             
-            stmt.executeUpdate();
+            deleteRegistrationsStatement = conn.prepareStatement(deleteRegistrations);
+            deleteRegistrationsStatement.setInt(1, user.getId());
+            deleteRegistrationsStatement.executeUpdate();
             
-        } finally {
-            DBUtil.closeQuietly(stmt);
+            conn.commit();
+            conn.setAutoCommit(true);
+        } 
+        catch (Exception ex) { }
+        finally {
+            DBUtil.closeQuietly(deleteUserStatement );
         }
+    	
+    }
+    
+    public static boolean deleteCourseById(Connection conn, CourseAndCourseRegistration cc) throws SQLException {
+    	String deleteCourse = "delete from " + Course.SCHEMA.getDbTableName() +
+						" where id = ? ";
+    	
+    	String deleteRegistrations = "delete from " + CourseRegistration.SCHEMA.getDbTableName() +
+					 	" where course_id = ? ";
+        
+    	PreparedStatement deleteRegistrationsStatement = null; 
+        PreparedStatement deleteCourseStatement = null;
+        
+        try {
+        	conn.setAutoCommit(false);
+        	
+        	deleteRegistrationsStatement = conn.prepareStatement(deleteRegistrations);
+        	deleteRegistrationsStatement.setInt(1, cc.getCourse().getId());
+        	deleteRegistrationsStatement.executeUpdate();
+        	
+            deleteCourseStatement=conn.prepareStatement(deleteCourse);
+            deleteCourseStatement.setInt(1, cc.getCourse().getId());
+            deleteCourseStatement.executeUpdate();
+
+            conn.commit();
+            
+            conn.setAutoCommit(true);
+            DBUtil.closeQuietly(deleteCourseStatement);
+            return true;
+        } catch (Exception ex) {
+        	
+        }
+        conn.setAutoCommit(true);
+        DBUtil.closeQuietly(deleteCourseStatement);
+        return false;
+    	
+    	
     	
     }
     
@@ -357,7 +409,7 @@ public class ConfigurationUtil
 	                continue;
 	            }
 	            numProcessed++;
-	            String[] tokens=line.split("\t");
+	            String[] tokens=line.split(";");
 	            String username=tokens[0];
 	            String firstname=tokens[1];
 	            String lastname=tokens[2];
@@ -418,7 +470,7 @@ public class ConfigurationUtil
                 continue;
             }
             numProcessed++;
-            String[] tokens=line.split("\t");
+            String[] tokens=line.split(";");
             String username=tokens[0];
             String firstname=tokens[1];
             String lastname=tokens[2];
