@@ -78,7 +78,7 @@ public class CreateWebappDatabase {
 	};
 	
 	private static class Props {
-
+		
 		public String ccUserName;
 		public String ccPassword;
 		public String ccFirstname;
@@ -88,10 +88,11 @@ public class CreateWebappDatabase {
 		public String ccInstitutionName;
 		public String ccRepoUrl;
 		
+		
 		public List<String> termNames = new ArrayList<String>();
 
 		public Props() {
-			termNames.addAll(Arrays.asList("Winter", "Spring", "Summer", "Summer 1", "Summer 2", "Fall"));
+			termNames.addAll(Arrays.asList("Winter", "Summer"));
 		}
 	}
 	
@@ -144,7 +145,7 @@ public class CreateWebappDatabase {
 				createWebappDatabase();
 			}
 		} catch (SQLException e) {
-			// Handle SQLException by printing an error message:
+			// Handle ScreateSampleDataQLException by printing an error message:
 			// these are likely to be meaningful to the user
 			// (for example, can't create the database because
 			// it already exists.)
@@ -162,19 +163,33 @@ public class CreateWebappDatabase {
 		
 		Props props = new Props();
 		
-		System.out.println("\n  >> Note: the user account you create will have superuser privileges <<\n");
-		props.ccUserName = ConfigurationUtil.ask(keyboard, "Enter a username for your CloudCoder account: ");
-		props.ccPassword = ConfigurationUtil.ask(keyboard, "Enter a password for your CloudCoder account");
-		props.ccFirstname = ConfigurationUtil.ask(keyboard, "What is your first name?");
-		props.ccLastname= ConfigurationUtil.ask(keyboard, "What is your last name?");
-		props.ccEmail= ConfigurationUtil.ask(keyboard, "What is your email address?");
-		props.ccWebsite = ConfigurationUtil.ask(keyboard, "What is your website URL?");
-		props.ccInstitutionName = ConfigurationUtil.ask(keyboard, "What is your institution name (e.g, 'Unseen University')?");
-		props.ccRepoUrl = ConfigurationUtil.ask(keyboard, "Enter the URL of the exercise repository", "https://cloudcoder.org/repo");
+		if (PropertiesResolver.getInstance().getLdapIndication()) {
+			System.out.println("\n  >> Enter your LDAP lector credentials <<\n");
+			
+			props.ccUserName = ConfigurationUtil.ask(keyboard, "Enter a LDAP username: ");
+			props.ccPassword = ConfigurationUtil.ask(keyboard, "Enter a LDAP password: ");
+		}
+		else {
+			System.out.println("\n  >> Note: the user account you create will have superuser privileges <<\n");
+			
+			props.ccUserName = ConfigurationUtil.ask(keyboard, "Enter a username for your CloudCoder account: ");
+			props.ccPassword = ConfigurationUtil.ask(keyboard, "Enter a password for your CloudCoder account: ");
+			props.ccFirstname = ConfigurationUtil.ask(keyboard, "What is your first name?");
+			props.ccLastname= ConfigurationUtil.ask(keyboard, "What is your last name?");
+			props.ccEmail= ConfigurationUtil.ask(keyboard, "What is your email address?");
+			props.ccWebsite = ConfigurationUtil.ask(keyboard, "What is your website URL?");
+			props.ccInstitutionName = ConfigurationUtil.ask(keyboard, "What is your institution name (e.g, 'Unseen University')?");
+			props.ccRepoUrl = ConfigurationUtil.ask(keyboard, "Enter the URL of the exercise repository", "https://cloudcoder.org/repo");
+		}
 		
+
 		choseTerms(keyboard, props);
 		
-		doCreateWebappDatabase(props);
+		try {
+			doCreateWebappDatabase(props);
+		} catch (Exception e) {
+			System.out.println("Database creation ended with error: " + e.getMessage());
+		}
 	}
 
 	private static void choseTerms(Scanner keyboard, Props props) {
@@ -182,7 +197,7 @@ public class CreateWebappDatabase {
 		for (String termName : props.termNames) {
 			System.out.println("  " + termName);
 		}
-		String ans = ConfigurationUtil.ask(keyboard, "\nUse these? (yes/no, answer no to define your own terms) ");
+		String ans = ConfigurationUtil.ask(keyboard, "\nUse these? (yes/no, answer no to define your own terms; default: yes) ", "yes");
 		if (ans.toLowerCase().equals("yes")) {
 			return;
 		}
@@ -205,7 +220,7 @@ public class CreateWebappDatabase {
 	}
 
 	private static void doCreateWebappDatabase(Props props)
-			throws ClassNotFoundException, IOException, SQLException {
+			throws Exception {
 		Class.forName("com.mysql.jdbc.Driver");
 
 		Properties config = DBUtil.getConfigProperties();
@@ -254,22 +269,36 @@ public class CreateWebappDatabase {
 		System.out.println("Creating demo course...");
 		int courseId = CreateSampleData.createDemoCourse(conn, lastTerm);
 		
-		// Create an initial user
-		System.out.println("Creating initial user...");
-		int userId = ConfigurationUtil.createOrUpdateUser(conn, 
-				props.ccUserName, 
-				props.ccFirstname,
-				props.ccLastname,
-				props.ccEmail,
-				props.ccPassword,
-				props.ccWebsite);
-		
-		// Make the initial user a superuser
+		// ---------- USER SECTION ----------
 		User initialUser = new User();
-		initialUser.setId(userId);
-		DBUtil.loadModelObject(conn, initialUser);
-		initialUser.setSuperuser(true);
-		DBUtil.updateModelObject(conn, initialUser);
+		int userId = 0;
+		
+		if (PropertiesResolver.getInstance().getLdapIndication()) {
+			LdapBase ldapBase = new LdapBase();
+			User searchedUser = ldapBase.getUserEntity(props.ccUserName, props.ccPassword);
+			
+			if (searchedUser == null || !searchedUser.isSuperuser()) {
+				throw new Exception("Searched user could not be found or isn't lector");
+			}
+			userId = searchedUser.getId();
+		}
+		else {
+			// Create an initial user
+			System.out.println("Creating initial user...");
+			userId = ConfigurationUtil.createOrUpdateUser(conn, 
+					props.ccUserName, 
+					props.ccFirstname,
+					props.ccLastname,
+					props.ccEmail,
+					props.ccPassword,
+					props.ccWebsite);
+			
+			// Make the initial user a superuser
+			initialUser.setId(userId);
+			DBUtil.loadModelObject(conn, initialUser);
+			initialUser.setSuperuser(true);
+			DBUtil.updateModelObject(conn, initialUser);			
+		}
 		
 		// Register the user as an instructor in the demo course
 		System.out.println("Registering initial user for demo course...");
