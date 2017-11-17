@@ -86,6 +86,14 @@ if (useFeature('webapp')) {
 	
 	section("Login service properties");
 	
+	askprop("Do you want to use LDAP for authenticating and authorizing user?","cloudcoder.ldap.usage","no");
+	if ($properties{"cloudcoder.ldap.usage"} ne "no") {
+		askprop("What is the hostname or IP address of your LDAP server?","cloudcoder.ldap.address","ldap://0.0.0.0:389/");
+		askprop("What is the default student pool in LDAP?","cloudcoder.ldap.students","ou=students,ou=users,dc=cloudcoder,dc=vse,dc=cz");
+		askprop("What is the default lector pool in LDAP?","cloudcoder.ldap.lectors","ou=lectors,ou=users,dc=cloudcoder,dc=vse,dc=cz");
+		
+	}
+
 	askprop("Which login service do you want to use (imap, database, remoteuser)?",
 		"cloudcoder.login.service", "database");
 	if ($properties{"cloudcoder.login.service"} eq 'imap') {
