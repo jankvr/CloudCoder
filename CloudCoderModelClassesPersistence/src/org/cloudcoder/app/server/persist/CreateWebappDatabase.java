@@ -168,6 +168,8 @@ public class CreateWebappDatabase {
 			
 			props.ccUserName = ConfigurationUtil.ask(keyboard, "Enter a LDAP username: ");
 			props.ccPassword = ConfigurationUtil.ask(keyboard, "Enter a LDAP password: ");
+			props.ccInstitutionName = ConfigurationUtil.ask(keyboard, "What is your institution name (e.g, 'Unseen University')?");
+			props.ccRepoUrl = ConfigurationUtil.ask(keyboard, "Enter the URL of the exercise repository", "https://cloudcoder.org/repo");
 		}
 		else {
 			System.out.println("\n  >> Note: the user account you create will have superuser privileges <<\n");

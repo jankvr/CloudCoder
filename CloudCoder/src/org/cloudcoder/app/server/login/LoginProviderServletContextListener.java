@@ -21,6 +21,7 @@ package org.cloudcoder.app.server.login;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.cloudcoder.app.server.persist.PropertiesResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class LoginProviderServletContextListener implements ServletContextListen
 
 	@Override
 	public void contextInitialized(ServletContextEvent e) {
-		String providerType = e.getServletContext().getInitParameter("cloudcoder.login.service");
+		String providerType = PropertiesResolver.getInstance().getLoginService();
 		
 		if (providerType != null) {
 			if (providerType.equals("database")) {
@@ -55,6 +56,8 @@ public class LoginProviderServletContextListener implements ServletContextListen
 				theInstance = new ImapLoginProvider(e.getServletContext());
 			} else if (providerType.equals("remoteuser")) {
 				theInstance = new RemoteUserLoginProvider();
+			} else if (providerType.equals("ldap")) {
+				theInstance = new LdapLoginProvider();
 			}
 		}
 		
@@ -62,6 +65,8 @@ public class LoginProviderServletContextListener implements ServletContextListen
 			logger.error("Could not create a login provider of type {}", providerType);
 			theInstance = new ErrorLoginProvider();
 		}
+		
+		logger.info("Using {} as a provider", providerType);
 	}
 	
 

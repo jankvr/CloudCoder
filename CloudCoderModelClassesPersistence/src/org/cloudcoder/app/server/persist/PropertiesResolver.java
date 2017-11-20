@@ -101,4 +101,8 @@ public class PropertiesResolver {
 	public String getLdapLectorBase() {
 		return config.getProperty("cloudcoder.ldap.lectors");
 	}
+	
+	public String getLoginService() {
+		return config.getProperty("cloudcoder.login.service");
+	}
 }

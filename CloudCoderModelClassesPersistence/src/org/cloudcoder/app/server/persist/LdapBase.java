@@ -56,7 +56,7 @@ public class LdapBase {
 				user.setId(id);
 				user.setUsername(attrs.get("cn").toString());
 				user.setEmail(attrs.get("mail").toString());
-				user.setSuperuser(isStudent);
+				user.setSuperuser(!isStudent);
 			}
 			this.context.closeContext();
 			return user;
