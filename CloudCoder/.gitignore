@@ -4,7 +4,5 @@
 /war/WEB-INF/classes/*
 /war/WEB-INF/deploy/*
 /test-classes
-/war/WEB-INF/lib/gwt-servlet.jar
 *~
 /logs
-/war/WEB-INF/lib/gwt-servlet-deps.jar

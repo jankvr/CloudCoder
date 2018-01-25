@@ -10,9 +10,16 @@ import org.cloudcoder.app.shared.model.User;
 
 public class LdapBase {
 	private LdapContext context;
+	private boolean isAuth;
 
 	public LdapBase() {
 		this.context = new LdapContext();
+		this.isAuth = false;
+	}
+	
+	public LdapBase(boolean isAuth) {
+		this.context = new LdapContext();
+		this.isAuth = isAuth;
 	}
 
 	public User getUserEntity(String principal, String credentials) {
@@ -22,11 +29,17 @@ public class LdapBase {
 		String base = PropertiesResolver.getInstance().getLdapStudentBase();
 
 		// Search in student base.
-		context = this.context.getDirContext(principal, credentials, PropertiesResolver.getInstance().getLdapStudentBase());
+		context = credentials == null || credentials == "" ?
+					this.context.getDirContext(principal, PropertiesResolver.getInstance().getLdapStudentBase(), isAuth) :
+					this.context.getDirContext(principal, credentials, PropertiesResolver.getInstance().getLdapStudentBase());
+					
 
 		if (context == null) {
 			// If the context is still null, try to search in lector base.
-			context = this.context.getDirContext(principal, credentials, PropertiesResolver.getInstance().getLdapLectorBase());
+			context = credentials == null || credentials == "" ?
+						this.context.getDirContext(principal, PropertiesResolver.getInstance().getLdapLectorBase(), isAuth) :
+						this.context.getDirContext(principal, credentials, PropertiesResolver.getInstance().getLdapLectorBase());
+					
 
 			// If context retrieval is unsuccessful, return null.
 			if (context == null) {
@@ -46,24 +59,32 @@ public class LdapBase {
 			User user = null;
 
 			while (answer.hasMore()) {
-				user = new User();
-
 				Attributes attrs = ((SearchResult) answer.next()).getAttributes();
 				
-				String notParsedId = attrs.get("uid").toString().replaceAll("[^0-9]", "");
-				int id = Integer.parseInt(notParsedId);
-				
-				user.setId(id);
-				user.setUsername(attrs.get("cn").toString());
-				user.setEmail(attrs.get("mail").toString());
-				user.setSuperuser(!isStudent);
+				user = parseUser(attrs, isStudent);
 			}
 			this.context.closeContext();
 			return user;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private User parseUser(Attributes attrs, boolean studentFlag) {
+		if (attrs == null) {
+			return null;
+		}
+		
+		User user = new User();
+		
+		String notParsedId = attrs.get("uid").toString().replaceAll("[^0-9]", "");
+		int id = Integer.parseInt(notParsedId);
+		
+		user.setId(id);
+		user.setUsername(attrs.get("cn").toString());
+		user.setEmail(attrs.get("mail").toString());
+		user.setSuperuser(!studentFlag);
+		
+		return user;
 	}
 }
