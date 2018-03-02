@@ -64,6 +64,12 @@ public enum ProblemType {
 	JAVA_PROGRAM(Language.JAVA, false),
 	
 	/**
+	 * Problem involving writing a JUnit 4.0 test which tests method
+	 * written down in code skeleton
+	 */
+	JUNIT(Language.JAVA, false),
+	
+	/**
 	 * Problem involving writing a complete Ruby method.
 	 */
 	RUBY_METHOD(Language.RUBY, true),

@@ -23,9 +23,10 @@ package org.cloudcoder.builder2.model;
  * for a Java problem.)
  * 
  * @author David Hovemeyer
+ * @author Jan Kovar
  */
 public class ExternalLibrary {
-	private final boolean available;
+	private boolean available;
 	private final String url;
 	private final String md5;
 	private final String fileName;
@@ -81,5 +82,14 @@ public class ExternalLibrary {
 	 */
 	public String getFileName() {
 		return fileName;
+	}
+	
+	/**
+	 * Set the "available" attribute to specific value
+	 * 
+	 * @param bool specific value
+	 */
+	public void setAvailable(boolean bool) {
+		this.available = bool;
 	}
 }

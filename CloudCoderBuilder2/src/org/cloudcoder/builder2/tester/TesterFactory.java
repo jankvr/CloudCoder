@@ -43,6 +43,10 @@ import org.cloudcoder.builder2.javamethod.AddJavaMethodScaffoldingBuildStep;
 import org.cloudcoder.builder2.javamethod.AddJavaMethodTestDriverBuildStep;
 import org.cloudcoder.builder2.javamethod.ExecuteJavaMethodTestsBuildStep;
 import org.cloudcoder.builder2.javaprogram.JavaProgramToCommandForEachCommandInputBuildStep;
+import org.cloudcoder.builder2.junit.AddCommandToJUnitTestBuildStep;
+import org.cloudcoder.builder2.junit.AddJUnitScaffoldingBuildStep;
+import org.cloudcoder.builder2.junit.FetchJUnitLibrariesBuildStep;
+import org.cloudcoder.builder2.junit.JUnitToCommandForEachCommandInputBuildStep;
 import org.cloudcoder.builder2.model.IBuildStep;
 import org.cloudcoder.builder2.model.Tester;
 import org.cloudcoder.builder2.pythonfunction.AddPythonFunctionScaffoldingBuildStep;
@@ -120,6 +124,21 @@ public abstract class TesterFactory {
 	};
 	
 	/**
+	 * Array of {@link IBuildStep}s needed to test a {@link ProblemType#JUNIT}
+	 * submission.
+	 */
+	private static final IBuildStep[] JUNIT_TESTER_STEPS = {
+		new FetchExternalLibraryBuildStep(),
+		new AddJUnitScaffoldingBuildStep(),
+		new JavaCompilerBuildStep(),
+		new BytecodeToBytecodeExecutableBuildStep(),
+		new FetchJUnitLibrariesBuildStep(),
+		new AddCommandToJUnitTestBuildStep(),
+		new JUnitToCommandForEachCommandInputBuildStep(),
+		new ExecuteCommandForEachCommandInputBuildStep(),
+	};
+	
+	/**
 	 * Array of {@link IBuildStep}s needed to test a {@link ProblemType#JAVA_METHOD}
 	 * submission.
 	 */
@@ -178,5 +197,6 @@ public abstract class TesterFactory {
 		PROBLEM_TYPE_TO_TESTER_MAP.put(ProblemType.JAVA_METHOD, createTester(JAVA_METHOD_BUILD_STEPS));
 		PROBLEM_TYPE_TO_TESTER_MAP.put(ProblemType.PYTHON_FUNCTION, createTester(PYTHON_FUNCTION_BUILD_STEPS));
 		PROBLEM_TYPE_TO_TESTER_MAP.put(ProblemType.RUBY_METHOD, createTester(RUBY_METHOD_BUILD_STEPS));
+		PROBLEM_TYPE_TO_TESTER_MAP.put(ProblemType.JUNIT, createTester(JUNIT_TESTER_STEPS));
 	}
 }

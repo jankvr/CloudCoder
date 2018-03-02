@@ -21,10 +21,13 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 
+import org.cloudcoder.app.shared.model.ProblemType;
+
 /**
  * Scan Java program text to determine package and class names.
  * 
  * @author David Hovemeyer
+ * @author Jan Kovar
  */
 public class FindJavaPackageAndClassNames {
 
@@ -48,7 +51,7 @@ public class FindJavaPackageAndClassNames {
 	 * 
 	 * @param programText the Java program text to scan
 	 */
-	public void determinePackageAndClassNames(String programText) {
+	public void determinePackageAndClassNames(String programText, ProblemType type) {
 		StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(programText));
 		
 		tokenizer.parseNumbers();
@@ -62,8 +65,13 @@ public class FindJavaPackageAndClassNames {
 			Mode mode = Mode.SCAN;
 			StringBuilder pkgName = new StringBuilder();
 			String clsName = null;
+			boolean breakFlag = false;
 			
 			while (true) {
+				if (breakFlag) {
+					break;
+				}
+				
 				if (mode == Mode.SCAN && pkgName.length() > 0 && clsName != null) {
 					break;
 				}
@@ -95,6 +103,10 @@ public class FindJavaPackageAndClassNames {
 				case CLASS:
 					if (token == StreamTokenizer.TT_WORD) {
 						clsName = tokenizer.sval;
+						// Hit the first match and break the whole loop.
+						if (type == ProblemType.JUNIT) {
+							breakFlag = true;
+						}
 					}
 					mode = Mode.SCAN;
 				}

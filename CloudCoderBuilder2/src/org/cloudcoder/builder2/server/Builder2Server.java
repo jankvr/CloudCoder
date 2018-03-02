@@ -272,6 +272,7 @@ public class Builder2Server implements Runnable {
 			stateManager.setState(State.NOT_CONNECTED);
 			watchdogThread = new Thread(new Watchdog());
 			watchdogThread.start();
+
 			while (!shutdownRequested) {
 				runOnce();
 			}

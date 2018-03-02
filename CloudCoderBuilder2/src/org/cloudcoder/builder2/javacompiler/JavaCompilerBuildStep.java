@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.cloudcoder.app.shared.model.Problem;
+import org.cloudcoder.app.shared.model.ProblemType;
 import org.cloudcoder.app.shared.model.SubmissionResult;
 import org.cloudcoder.builder2.model.BuilderSubmission;
 import org.cloudcoder.builder2.model.Bytecode;
@@ -48,14 +50,24 @@ public class JavaCompilerBuildStep implements IBuildStep {
 	@Override
 	public void execute(BuilderSubmission submission, Properties config) {
 		ProgramSource[] programSourceList = submission.requireArtifact(this.getClass(), ProgramSource[].class);
+		Problem problem = submission.requireArtifact(this.getClass(), Problem.class);
 
+		ProblemType type;
+		
+		if (problem == null) {
+			type = ProblemType.JAVA_PROGRAM;
+		}
+		else {
+			type = problem.getProblemType();
+		}
+		
 		// Determine the package name and top-level class name,
 		// add resulting FindJavaPackageAndClassNames object as submission artifact
 		FindJavaPackageAndClassNames[] packageAndClassNamesList = new FindJavaPackageAndClassNames[programSourceList.length];
 		
 		for (int i = 0; i < programSourceList.length; i++) {
 			packageAndClassNamesList[i] = new FindJavaPackageAndClassNames();
-			packageAndClassNamesList[i].determinePackageAndClassNames(programSourceList[i].getProgramText());
+			packageAndClassNamesList[i].determinePackageAndClassNames(programSourceList[i].getProgramText(), type);
 			if (packageAndClassNamesList[i].getClassName() == null) {
 				SubmissionResult result = SubmissionResultUtil.createSubmissionResultForUnexpectedBuildError(
 						"Could not determine top-level class name");
