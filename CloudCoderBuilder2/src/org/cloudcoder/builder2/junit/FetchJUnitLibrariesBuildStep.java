@@ -27,11 +27,13 @@ public class FetchJUnitLibrariesBuildStep implements IBuildStep {
 		map = new HashMap<ExternalLibrary, byte[]>();
 		ExternalLibrary junitLib = new ExternalLibrary(false, "libs/junit-4.12.jar", "", "junit-4.12.jar");
 		ExternalLibrary hamcrestLib = new ExternalLibrary(false, "libs/hamcrest-core-1.3.jar", "", "hamcrest-core-1.3.jar");
+		ExternalLibrary codeAnalyserLib = new ExternalLibrary(false, "libs/codeanalyser-1.2.jar", "", "codeanalyser-1.2.jar");
 		
 		this.putIntoMap(junitLib, submission);
 		this.putIntoMap(hamcrestLib, submission);
+		this.putIntoMap(codeAnalyserLib, submission);
 		
-		submission.addArtifact(new ExternalLibrary[] { junitLib, hamcrestLib });
+		submission.addArtifact(new ExternalLibrary[] { junitLib, hamcrestLib, codeAnalyserLib });
 		
 	}
 	

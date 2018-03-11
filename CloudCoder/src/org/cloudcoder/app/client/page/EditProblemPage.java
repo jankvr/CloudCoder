@@ -31,6 +31,7 @@ import org.cloudcoder.app.client.view.EditDateField;
 import org.cloudcoder.app.client.view.EditDateTimeField;
 import org.cloudcoder.app.client.view.EditEnumField;
 import org.cloudcoder.app.client.view.EditModelObjectField;
+import org.cloudcoder.app.client.view.EditPercentageNumberField;
 import org.cloudcoder.app.client.view.EditStringField;
 import org.cloudcoder.app.client.view.EditStringFieldWithAceEditor;
 import org.cloudcoder.app.client.view.PageNavPanel;
@@ -249,6 +250,8 @@ public class EditProblemPage extends CloudCoderPage {
 			problemFieldEditorList.add(new EditEnumField<IProblem, ProblemType>("Problem type", ProblemType.class, ProblemData.PROBLEM_TYPE));
 			problemFieldEditorList.add(new EditStringField<IProblem>("Problem name", ProblemData.TESTNAME));
 			problemFieldEditorList.add(new EditStringField<IProblem>("Brief description", ProblemData.BRIEF_DESCRIPTION));
+			
+			problemFieldEditorList.add(new EditPercentageNumberField<IProblem>("Minimum code coverage", ProblemData.MINIMUM_COVERAGE));
 			
 			EditStringFieldWithAceEditor<IProblem> descriptionEditor =
 					new EditStringFieldWithAceEditor<IProblem>("Full description (HTML)", ProblemData.DESCRIPTION);

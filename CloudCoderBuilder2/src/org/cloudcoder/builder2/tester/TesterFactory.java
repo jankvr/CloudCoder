@@ -45,8 +45,11 @@ import org.cloudcoder.builder2.javamethod.ExecuteJavaMethodTestsBuildStep;
 import org.cloudcoder.builder2.javaprogram.JavaProgramToCommandForEachCommandInputBuildStep;
 import org.cloudcoder.builder2.junit.AddCommandToJUnitTestBuildStep;
 import org.cloudcoder.builder2.junit.AddJUnitScaffoldingBuildStep;
+import org.cloudcoder.builder2.junit.CheckJUnitTestsResultBuildStep;
+import org.cloudcoder.builder2.junit.EditSkeletonCodeBuildStep;
 import org.cloudcoder.builder2.junit.FetchJUnitLibrariesBuildStep;
 import org.cloudcoder.builder2.junit.JUnitToCommandForEachCommandInputBuildStep;
+import org.cloudcoder.builder2.junit.ValidateJUnitTestBuildStep;
 import org.cloudcoder.builder2.model.IBuildStep;
 import org.cloudcoder.builder2.model.Tester;
 import org.cloudcoder.builder2.pythonfunction.AddPythonFunctionScaffoldingBuildStep;
@@ -128,14 +131,17 @@ public abstract class TesterFactory {
 	 * submission.
 	 */
 	private static final IBuildStep[] JUNIT_TESTER_STEPS = {
-		new FetchExternalLibraryBuildStep(),
+		new ValidateJUnitTestBuildStep(),
+		new EditSkeletonCodeBuildStep(),
 		new AddJUnitScaffoldingBuildStep(),
+		new FetchExternalLibraryBuildStep(),
 		new JavaCompilerBuildStep(),
 		new BytecodeToBytecodeExecutableBuildStep(),
 		new FetchJUnitLibrariesBuildStep(),
 		new AddCommandToJUnitTestBuildStep(),
 		new JUnitToCommandForEachCommandInputBuildStep(),
 		new ExecuteCommandForEachCommandInputBuildStep(),
+		new CheckJUnitTestsResultBuildStep()
 	};
 	
 	/**

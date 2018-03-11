@@ -40,6 +40,7 @@ public class ProblemData implements Serializable, IProblemData {
 	private String testName;
 	private String briefDescription;
 	private String description;
+	private int minimumCoverage;
 	private String skeleton;
 	private int schemaVersion;
 	private String authorName;
@@ -71,6 +72,7 @@ public class ProblemData implements Serializable, IProblemData {
 		public void set(IProblemData obj, String value) { obj.setBriefDescription(value); }
 		public String get(IProblemData obj) { return obj.getBriefDescription(); }
 	};
+	
 	/** {@link ModelObjectField} for description (schema versions 0-2). */
 	public static final ModelObjectField<IProblemData, String> DESCRIPTION_V0_V2 =
 			new ModelObjectField<IProblemData, String>("description", String.class, 8192, ModelObjectIndexType.NONE, ModelObjectField.LITERAL) {
@@ -156,6 +158,13 @@ public class ProblemData implements Serializable, IProblemData {
 		public String get(IProblemData obj) { return obj.getExternalLibraryMD5(); }
 	};
 	
+	/** {@link ModelObjectField} for methods that need to be tested (leave blank if not JUnit test) */
+	public static final ModelObjectField<IProblemData, Integer> MINIMUM_COVERAGE = 
+			new ModelObjectField<IProblemData, Integer>("minimum_coverage", Integer.class, 0) {
+		public void set(IProblemData obj, Integer value) { obj.setMinimumCoverage(value); }
+		public Integer get(IProblemData obj) { return obj.getMinimumCoverage(); }
+	};
+	
 	/**
 	 * Description of fields (version 0 schema).
 	 */
@@ -222,7 +231,7 @@ public class ProblemData implements Serializable, IProblemData {
 		.finishDelta();
 	
 	/**
-	 * Description of firlds (schema version 7).
+	 * Description of fields (schema version 7).
 	 * No field changes, but new {@link ProblemType} members
 	 * have been added.
 	 */
@@ -230,9 +239,16 @@ public class ProblemData implements Serializable, IProblemData {
 		.finishDelta();
 
 	/**
+	 * New field
+	 */
+	public static final ModelObjectSchema<IProblemData> SCHEMA_V8 = ModelObjectSchema.basedOn(SCHEMA_V7, ProblemData.class)
+		.addAfter(EXTERNAL_LIBRARY_MD5, MINIMUM_COVERAGE)
+		.finishDelta();
+	
+	/**
 	 * Description of fields (current schema).
 	 */
-	public static final ModelObjectSchema<IProblemData> SCHEMA = SCHEMA_V7;
+	public static final ModelObjectSchema<IProblemData> SCHEMA = SCHEMA_V8;
 
 	/**
 	 * Constructor.
@@ -313,6 +329,24 @@ public class ProblemData implements Serializable, IProblemData {
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.cloudcoder.app.shared.model.IProblemData#getMinimumCoverage()
+	 */
+	@Override
+	public int getMinimumCoverage() {
+		return this.minimumCoverage;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.cloudcoder.app.shared.model.IProblemData#setMinimumCoverage(int)
+	 */
+	@Override
+	public void setMinimumCoverage(int minimumCoverage) {
+		this.minimumCoverage = minimumCoverage;
 	}
 
 	/* (non-Javadoc)
@@ -527,5 +561,6 @@ public class ProblemData implements Serializable, IProblemData {
 		empty.setTimestampUtc(System.currentTimeMillis());
 		empty.setLicense(ProblemLicense.NOT_REDISTRIBUTABLE);
 		empty.setParentHash("");
+		empty.setMinimumCoverage(0);
 	}
 }

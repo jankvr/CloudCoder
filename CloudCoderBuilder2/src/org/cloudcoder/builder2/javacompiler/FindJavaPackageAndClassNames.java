@@ -43,8 +43,7 @@ public class FindJavaPackageAndClassNames {
 	/**
 	 * Constructor.
 	 */
-	public FindJavaPackageAndClassNames() {
-	}
+	public FindJavaPackageAndClassNames() {}
 
 	/**
 	 * Scan given Java program text to find package and class names.

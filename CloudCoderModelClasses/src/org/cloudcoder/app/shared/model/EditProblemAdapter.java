@@ -71,6 +71,17 @@ public abstract class EditProblemAdapter implements IProblem {
 		return delegate.getDescription();
 	}
 
+	@Override 
+	public int getMinimumCoverage() {
+		return delegate.getMinimumCoverage();
+	}
+	
+	@Override
+	public void setMinimumCoverage(int minimumCoverage) {
+		delegate.setMinimumCoverage(minimumCoverage);
+		onChange();
+	}
+	
 	@Override
 	public void setDescription(String description) {
 		delegate.setDescription(description);

@@ -47,6 +47,14 @@ public interface IProblemData {
 	public abstract void setBriefDescription(String briefDescription);
 
 	public abstract String getBriefDescription();
+	
+	/**
+	 * 
+	 * @return Methods that need to be tested (used for JUnit testing)
+	 */
+	public abstract int getMinimumCoverage();
+	
+	public abstract void setMinimumCoverage(int minimumCoverage);
 
 	/**
 	 * @return the description

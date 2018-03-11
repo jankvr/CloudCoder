@@ -19,5 +19,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/CloudCoderModelClassesJSON"/>
 	<classpathentry kind="lib" path="lib/jython-standalone-2.5.3.jar"/>
 	<classpathentry kind="lib" path="lib/daemon-0.7.jar"/>
+	<classpathentry kind="lib" path="lib/codeanalyser-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
