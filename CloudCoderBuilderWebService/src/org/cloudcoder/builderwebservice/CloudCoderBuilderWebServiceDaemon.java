@@ -90,7 +90,7 @@ public class CloudCoderBuilderWebServiceDaemon extends JettyDaemon<BuilderWebSer
 		
 		// Register the OutOfProcessSubmitServiceServletContextListener,
 		// which will manage connections from the builders
-		ctxHandler.addEventListener(new OutOfProcessSubmitServiceServletContextListener());
+		//ctxHandler.addEventListener(new OutOfProcessSubmitServiceServletContextListener());
 
 		// Add the Submit servlet
 		ctxHandler.addServlet(new ServletHolder(new Submit()), "/submit/*");

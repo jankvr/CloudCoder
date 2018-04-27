@@ -32,7 +32,7 @@
 	<target name="webServiceUtil">
 		<ant inheritall="false" dir="../CloudCoderWebServiceUtil" target="jar"/>
 	</target>
-	
+
 	<target name="submissionQueue">
 		<ant inheritall="false" dir="../CloudCoderSubmissionQueue" target="jar"/>
 	</target>
